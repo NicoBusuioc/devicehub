@@ -60,15 +60,15 @@ Ein Device besitzt mindestens:
 
 - ID
 - Name
-- Status
+- DeviceState
 
 Die konkreten C++-Datentypen dafür selbst auswählen.
 
 ---
 
-### 2. Device Status
+### 2. Device DeviceState
 
-Der Status darf kein `bool` sein.
+Der DeviceState darf kein `bool` sein.
 
 Stattdessen soll ein `enum class` verwendet werden.
 
@@ -89,7 +89,7 @@ Mindestens folgende Zustände sollen existieren:
 - ID
 - Name
 
-Überlege selbst, welchen initialen Status ein neu erzeugtes Device haben soll.
+Überlege selbst, welchen initialen DeviceState ein neu erzeugtes Device haben soll.
 
 ---
 
@@ -101,7 +101,7 @@ Mindestens:
 
 - ID
 - Name
-- Status
+- DeviceState
 
 Dabei soll auf sinnvolle Verwendung von `const` geachtet werden.
 
@@ -203,8 +203,8 @@ TASK-001 ist abgeschlossen, wenn:
 - [ ] Projekt wird mit CMake erfolgreich konfiguriert
 - [ ] Projekt kompiliert mit C++20
 - [ ] `Device.hpp` und `Device.cpp` sind getrennt
-- [ ] `Device` besitzt ID, Name und Status
-- [ ] Status verwendet `enum class`
+- [ ] `Device` besitzt ID, Name und DeviceState
+- [ ] DeviceState verwendet `enum class`
 - [ ] Konstruktor initialisiert mindestens ID und Name
 - [ ] Getter sind vorhanden
 - [ ] `const` wurde sinnvoll eingesetzt

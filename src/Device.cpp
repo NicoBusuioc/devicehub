@@ -2,11 +2,12 @@
 
 unsigned int Device::uniq_id = 0;
 
-Device::Device (const std::string& newName, Status newStatus) 
-    : id(uniq_id++), name(newName), status(newStatus) {
+Device::Device (const std::string& newName, DeviceState newStatus) 
+    : id(uniq_id++), name(newName), deviceState(newStatus), connectionState(ConnectionState::OFFLINE) {
 }
 
-Device::Device (const std::string& newName) : id(uniq_id++), name(newName), status(Status::DISABLED) {
+Device::Device (const std::string& newName) 
+    : id(uniq_id++), name(newName), deviceState(DeviceState::DISABLED), connectionState(ConnectionState::OFFLINE) {
 }
 
 unsigned int Device::getId() const {
@@ -26,24 +27,44 @@ void Device::setName(const std::string& newName) {
     name = newName;
 }
 
-Status Device::getStatus() const {
-    return status;
+DeviceState Device::getDeviceState() const {
+    return deviceState;
 }
 
-void Device::setStatus(Status newStatus) {
-    status = newStatus;
+void Device::setDeviceState(DeviceState newStatus) {
+    deviceState = newStatus;
 }
 
-std::string Device::getStringStatus() const {
-    switch (status)
+std::string Device::getStringDeviceState() const {
+    switch (deviceState)
     {
-    case Status::ENABLED:
+    case DeviceState::ENABLED:
         return "ENABLED";
-    case Status::DISABLED:
+    case DeviceState::DISABLED:
         return "DISABLED";
-    case Status::ERROR:
+    case DeviceState::ERROR:
         return "ERROR";
     default:
         return "UNKNOWN";
     }
+}
+
+ConnectionState Device::getConnectionState() const {
+    return connectionState;
+}
+
+std::string Device::getStringConnectionState() const {
+    switch (connectionState)
+    {
+    case ConnectionState::ONLINE:
+        return "ONLINE";
+    case ConnectionState::OFFLINE:
+        return "OFFLINE";
+    default:
+        return "UNKNOWN";
+    }
+}
+
+void Device::setConnectionState(ConnectionState newConnectionState) {
+    connectionState = newConnectionState;
 }

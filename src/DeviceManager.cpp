@@ -18,7 +18,8 @@ size_t DeviceManager::getDeviceCount() const {
 
 void DeviceManager::printAllDevices() const {
     for (const Device& device : devices) {
-        std::cout << "ID: " << device.getId() << " | " << device.getName() << " | " << device.getStringStatus() << std::endl;
+        std::cout << "ID: " << device.getId() << " | " << device.getName() << " | " \
+            << device.getStringDeviceState() << " | " << device.getStringConnectionState() << std::endl;
     }
 }
 
@@ -49,4 +50,15 @@ std::optional<Device> DeviceManager::findDevice(unsigned int id) const{
             return device;
     }
     return {};
+}
+
+bool DeviceManager::setDeviceState(unsigned int id, ConnectionState state) {
+    for (Device& device : devices) {
+        if(id == device.getId()) {
+            device.setConnectionState(state);
+            return true;
+        }
+    }
+
+    return false;
 }
