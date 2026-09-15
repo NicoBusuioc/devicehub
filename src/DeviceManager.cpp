@@ -2,14 +2,14 @@
 #include "DeviceManager.hpp"
 
 /*
-Der Vector (std::vector<Device> devices;) speichert Device-Objekte, nicht Device-Referenz
-Deshalb kann er nicht einfach die Referenz speichern.
-
-Er erzeugt in seinem eigenen Speicher ein neues Device-Object, indem er den
-ursprünglichen Device kopiert
+this function receives an uniq_ptr and in order to move give the ownership of the pointer
+to the vector, we need to use std::move. 
+But why? so as the name says, it is an uniq_ptr, i.e. the can be only one instance. 
+Puting this pointer in a function, it will be called by value -> will try to make a copy of it -> it cann't work
+That's why we are not copying, but moving it - that is allowed.
 */
-void DeviceManager::addDevice(const Device& device) {
-    devices.push_back(device);
+void DeviceManager::addDevice(std::unique_ptr<Device> device) {
+    devices.push_back(std::move(device));
 }
 
 size_t DeviceManager::getDeviceCount() const {
@@ -17,45 +17,29 @@ size_t DeviceManager::getDeviceCount() const {
 }
 
 void DeviceManager::printAllDevices() const {
-    for (const Device& device : devices) {
-        std::cout << "ID: " << device.getId() << " | " << device.getName() << " | " \
-            << device.getStringDeviceState() << " | " << device.getStringConnectionState() << std::endl;
+    for (const auto& device : devices) {
+        std::cout << "ID: " << device->getId() << " | " << device->getName() << " | " \
+            << device->getStringDeviceState() << " | " << device->getStringConnectionState() << std::endl;
     }
 }
 
 /*
-Hier wird  kopie im std::optional<Device> gespeichert
-als alternative kann man mit:
-std::optional<std::reference_wrapper<const Device>>
-
-aber hier aufpassen mit std::vector, wenn man z.B. ein 
-Pushback macht, und Vector realoziert die Daten
-dann die Referenz wird nicht mitbezogen und das führt zu einem
-Undefined Behavior -> das nennt sich: reference invalidation
-
-
-optional
-   │
-   ├── leer
-   │
-   └── Referenz auf existierendes Device
-
-daher, wenn du später auf Device über std::optional 
-zugreifen willst, verwendet man pointer (->), siehe:
-main.c line 22
+the trick here is, each element of the vector has a container "smart pointer" uniq_pointer, 
+but it doesn't mean, we cann not use a Raw Pointer, so that is what we are doing.
+Once we found the Uniq_ptr -> we are getting than the Raw pointer of it! 
 */
-std::optional<Device> DeviceManager::findDevice(unsigned int id) const{
-    for (const Device& device : devices) {
-        if(id == device.getId())
-            return device;
+Device* DeviceManager::findDevice(unsigned int id) {
+    for (const auto& device : devices) {
+        if(id == device->getId())
+            return device.get(); // return the Raw Pointer
     }
-    return {};
+    return nullptr;
 }
 
 bool DeviceManager::setDeviceState(unsigned int id, ConnectionState state) {
-    for (Device& device : devices) {
-        if(id == device.getId()) {
-            device.setConnectionState(state);
+    for (auto& device : devices) {
+        if(id == device->getId()) {
+            device->setConnectionState(state);
             return true;
         }
     }

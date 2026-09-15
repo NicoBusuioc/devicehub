@@ -24,6 +24,7 @@ class Device {
     public:
         Device (const std::string& newName, DeviceState newStatus);
         Device (const std::string& newName);
+        virtual ~Device() = default;
         unsigned int getId() const;          // makes NO sense to return the const reference -> instead a copy
         // void setId(unsigned int newId);   // user should not be able to modify it
         const std::string& getName() const;  // makes sense to return the const reference -> instead a copy
