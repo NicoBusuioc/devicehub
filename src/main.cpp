@@ -20,14 +20,12 @@ int main () {
     std::cout << ("==========================================================================") << std::endl;
 
     deviceManager.addDevice(std::make_unique<TemperatureSensor> ("Temperature Sensor", 20.));
-    deviceManager.printAllDevices();
     ptr = deviceManager.findDevice(3);
-    if (ptr != nullptr) { // is raw pointer valid?
-        auto pTempSensor = dynamic_cast<TemperatureSensor*>(ptr); // try to cast it into the object it really is, but use the c++ cast -> it is a runtime check wheter this pointer can be converted
-        if (pTempSensor) {
-            std::cout << pTempSensor->getTemperature() << std::endl;
-        }
+    if(ptr != nullptr) {
+        ptr->setConnectionState(ConnectionState::ONLINE);
+        ptr->setDeviceState(DeviceState::ENABLED);
     }
+    deviceManager.printAllDevices();
 
     return 0;
 }

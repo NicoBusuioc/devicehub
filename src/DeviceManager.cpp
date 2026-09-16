@@ -1,4 +1,3 @@
-#include <iostream>
 #include "DeviceManager.hpp"
 
 /*
@@ -18,8 +17,7 @@ size_t DeviceManager::getDeviceCount() const {
 
 void DeviceManager::printAllDevices() const {
     for (const auto& device : devices) {
-        std::cout << "ID: " << device->getId() << " | " << device->getName() << " | " \
-            << device->getStringDeviceState() << " | " << device->getStringConnectionState() << std::endl;
+        device->printDeviceInfo();
     }
 }
 

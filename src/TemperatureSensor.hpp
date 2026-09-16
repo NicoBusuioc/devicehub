@@ -9,5 +9,6 @@ class TemperatureSensor : public Device {
         TemperatureSensor(const std::string& newName, float newTemperature);
         float getTemperature() const;
         void setTemperature(float newTemperature);
+        void printDeviceInfo() const override;
 };
 

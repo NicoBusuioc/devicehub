@@ -20,6 +20,8 @@ class Device {
         std::string name;
         DeviceState deviceState;
         ConnectionState connectionState;
+    protected:
+        void printCommonInfo () const;
     
     public:
         Device (const std::string& newName, DeviceState newStatus);
@@ -35,6 +37,7 @@ class Device {
         ConnectionState getConnectionState() const;
         std::string getStringConnectionState() const;
         void setConnectionState(ConnectionState newConnectionState);
+        virtual void printDeviceInfo() const;
 };
 
 /*

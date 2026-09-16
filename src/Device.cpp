@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Device.hpp"
 
 unsigned int Device::uniq_id = 0;
@@ -67,4 +68,14 @@ std::string Device::getStringConnectionState() const {
 
 void Device::setConnectionState(ConnectionState newConnectionState) {
     connectionState = newConnectionState;
+}
+
+void Device::printCommonInfo() const{
+    std::cout << "ID: " << getId() << " | " << getName() << " | " \
+            << getStringDeviceState() << " | " << getStringConnectionState();
+}
+
+void Device::printDeviceInfo() const {
+    printCommonInfo();
+    std::cout << std::endl;
 }

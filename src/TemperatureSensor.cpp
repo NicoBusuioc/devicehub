@@ -1,3 +1,4 @@
+#include <iostream>
 #include "TemperatureSensor.hpp"
 
 
@@ -17,4 +18,9 @@ float TemperatureSensor::getTemperature() const {
 
 void TemperatureSensor::setTemperature(float newTemperature) {
     temperature = newTemperature;
+}
+
+void TemperatureSensor::printDeviceInfo() const {
+    printCommonInfo(); 
+    std::cout << " | " << getTemperature() << "°C" << std::endl;
 }
