@@ -26,7 +26,7 @@ class Device {
     public:
         Device (const std::string& newName, DeviceState newStatus);
         Device (const std::string& newName);
-        virtual ~Device() = default;
+        virtual ~Device() = default;         // make the destructor virtuell
         unsigned int getId() const;          // makes NO sense to return the const reference -> instead a copy
         // void setId(unsigned int newId);   // user should not be able to modify it
         const std::string& getName() const;  // makes sense to return the const reference -> instead a copy
@@ -37,7 +37,7 @@ class Device {
         ConnectionState getConnectionState() const;
         std::string getStringConnectionState() const;
         void setConnectionState(ConnectionState newConnectionState);
-        virtual void printDeviceInfo() const;
+        virtual void printDeviceInfo() const = 0; // PURE VIRTUAL -> this is an abstract class because of this function
 };
 
 /*

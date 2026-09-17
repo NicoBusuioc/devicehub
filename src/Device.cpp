@@ -74,8 +74,3 @@ void Device::printCommonInfo() const{
     std::cout << "ID: " << getId() << " | " << getName() << " | " \
             << getStringDeviceState() << " | " << getStringConnectionState();
 }
-
-void Device::printDeviceInfo() const {
-    printCommonInfo();
-    std::cout << std::endl;
-}

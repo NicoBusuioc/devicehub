@@ -8,6 +8,8 @@ add_executable(${PROJECT_NAME}
     src/Device.cpp
     src/DeviceManager.cpp
     src/TemperatureSensor.cpp
+    src/SerialController.cpp
+    src/GpioController.cpp
     )
 
 # private here means, that this project must be build with c++20 std, aber
