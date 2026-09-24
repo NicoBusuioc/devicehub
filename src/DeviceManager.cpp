@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "DeviceManager.hpp"
 
 /*
@@ -9,6 +10,18 @@ That's why we are not copying, but moving it - that is allowed.
 */
 void DeviceManager::addDevice(std::unique_ptr<Device> device) {
     devices.push_back(std::move(device));
+}
+
+std::optional<std::unique_ptr<Device>> DeviceManager::removeDevice(unsigned int id) {
+
+    for (size_t i=0; i<devices.size(); i++) {
+        if (id == devices.at(i)->getId()) {
+            auto tmp = std::move(devices.at(i));
+            devices.erase(devices.begin()+i);
+            return tmp; // Bei lokalen Rückgabewerten führt C++ die Verschiebung automatisch durch.
+        }
+    }
+    return {};
 }
 
 size_t DeviceManager::getDeviceCount() const {

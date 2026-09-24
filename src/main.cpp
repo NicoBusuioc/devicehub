@@ -29,6 +29,19 @@ int main () {
     }
     deviceManager.printAllDevices();
 
+    std::cout << ("==========================================================================") << std::endl;
+    std::cout << "Device count: " << deviceManager.getDeviceCount() << std::endl;
+    auto removedDevice = deviceManager.removeDevice(0);
+    if (removedDevice.has_value()) {
+        std::cout << "from the main: " << removedDevice.value()->getName() << std::endl;
+        removedDevice.value()->printDeviceInfo();
+    }
+
+    removedDevice = deviceManager.removeDevice(20);
+    if (!removedDevice.has_value()) {
+        std::cout << "Device with ID: 20 wasn't registered yet!" << std::endl;
+    }
+    std::cout << "Device count: " << deviceManager.getDeviceCount() << std::endl;
     return 0;
 }
 

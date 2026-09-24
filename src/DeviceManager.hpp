@@ -10,6 +10,7 @@ class DeviceManager
         std::vector<std::unique_ptr<Device>> devices;
     public:
         void addDevice(std::unique_ptr<Device> device);
+        std::optional<std::unique_ptr<Device>> removeDevice(unsigned int id);
         size_t getDeviceCount() const;
         void printAllDevices() const;
         Device* findDevice(unsigned int id);
