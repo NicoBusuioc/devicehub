@@ -42,6 +42,29 @@ int main () {
         std::cout << "Device with ID: 20 wasn't registered yet!" << std::endl;
     }
     std::cout << "Device count: " << deviceManager.getDeviceCount() << std::endl;
+
+    std::cout << ("==========================================================================") << std::endl;
+    auto device = deviceManager.findDevice(2);
+    if (device != nullptr) {
+        device->setConnectionState(ConnectionState::ONLINE);
+    }
+
+    const DeviceManager& constDM = deviceManager;
+    auto constDevice = constDM.findDevice(2);
+    if (constDevice != nullptr) {
+        constDevice->printDeviceInfo();
+        // constDevice->setConnectionState(ConnectionState::OFFLINE);
+        // constDevice->printDeviceInfo();
+    }
+
+    auto id = 21;
+    device = deviceManager.findDevice(id);
+    constDevice = constDM.findDevice(id);
+    if ((device == nullptr) && (constDevice == nullptr)) {
+        std::cout << "Device with ID: " << id << " wasn't registered yet!" << std::endl;
+    }
+
+
     return 0;
 }
 

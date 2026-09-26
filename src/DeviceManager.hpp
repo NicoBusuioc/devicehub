@@ -14,6 +14,7 @@ class DeviceManager
         size_t getDeviceCount() const;
         void printAllDevices() const;
         Device* findDevice(unsigned int id);
+        const Device* findDevice(unsigned int id) const;
         bool setDeviceState(unsigned int id, ConnectionState state);
 };
 

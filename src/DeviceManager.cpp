@@ -41,8 +41,18 @@ Once we found the Uniq_ptr -> we are getting than the Raw pointer of it!
 */
 Device* DeviceManager::findDevice(unsigned int id) {
     for (const auto& device : devices) {
-        if(id == device->getId())
+        if(id == device->getId()) {
             return device.get(); // return the Raw Pointer
+        }
+    }
+    return nullptr;
+}
+
+const Device* DeviceManager::findDevice(unsigned int id) const {
+        for (const auto& device : devices) {
+        if(id == device->getId()) {
+            return device.get();
+        }
     }
     return nullptr;
 }
