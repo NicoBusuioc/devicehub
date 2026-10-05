@@ -10,6 +10,7 @@ add_executable(${PROJECT_NAME}
     src/TemperatureSensor.cpp
     src/SerialController.cpp
     src/GpioController.cpp
+    src/FileDescriptor.cpp
     )
 
 # private here means, that this project must be build with c++20 std, aber
