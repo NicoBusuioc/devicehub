@@ -15,4 +15,4 @@ add_executable(${PROJECT_NAME}
 
 # private here means, that this project must be build with c++20 std, aber
 # those clients, that are using it, will not, in case it will be a library
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)

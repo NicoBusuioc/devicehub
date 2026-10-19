@@ -1,10 +1,30 @@
 #include <iostream>
 #include <memory>
+#include <fcntl.h>
+#include <unistd.h>
+#include <cstring>
+#include <expected>
 #include "Device.hpp"
 #include "DeviceManager.hpp"
 #include "TemperatureSensor.hpp"
 #include "SerialController.hpp"
 #include "GpioController.hpp"
+#include "FileDescriptor.hpp"
+
+namespace OD {  // Open Device Namespace
+    std::expected<FileDescriptor, std::error_code> openDevice(const std::string& path) {
+        int fd = ::open(path.c_str(), O_RDWR | O_TRUNC);
+
+        if (fd == -1) {
+            const int err = errno;
+            return std::unexpected(
+                std::error_code(err, std::generic_category())
+            );
+        }
+
+        return FileDescriptor{fd};
+    }
+}
 
 int main () {
 
@@ -64,7 +84,27 @@ int main () {
         std::cout << "Device with ID: " << id << " wasn't registered yet!" << std::endl;
     }
 
+    std::cout << ("==========================================================================") << std::endl;
+
+    auto result =  OD::openDevice("test.txt");
+    if (result.has_value()) {
+        std::cout << "Opened Device!" << std::endl;
+
+        const size_t bytes = strlen("Hello from DeviceHub!");
+        ssize_t num_bytes = ::write(result.value().getFd(), "Hello from DeviceHub!", bytes);
+        if (num_bytes == -1) {
+            const int savedErrno = errno;
+            std::error_code ec(savedErrno, std::generic_category());
+            std::cerr << "Write failed: " << ec.message() << std::endl;
+        } else if (static_cast<size_t>(num_bytes) != bytes) {
+            std::cerr << "Written only " << num_bytes << " instead of " << bytes << std::endl;
+        } else {
+            std::cerr << "Data writtten with success!" << std::endl;
+        }
+    } else {
+        std::cout << "unexpected " << result.error() << std::endl;
+    }
+
 
     return 0;
 }
-
