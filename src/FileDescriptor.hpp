@@ -1,4 +1,7 @@
 #pragma once
+#include <expected>
+#include <span>
+#include <system_error>
 
 class FileDescriptor {
     private:
@@ -12,4 +15,7 @@ class FileDescriptor {
         FileDescriptor& operator=(FileDescriptor&&) noexcept;
         int getFd() const;
         bool isFdValid() const;
+        std::expected<std::size_t, std::error_code> read(std::span<std::byte> buffer);
+        std::expected<std::size_t, std::error_code> write(std::span<const std::byte> buffer);
+
 };

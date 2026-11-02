@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <cstring>
 #include <expected>
+#include <array>
 #include "Device.hpp"
 #include "DeviceManager.hpp"
 #include "TemperatureSensor.hpp"
@@ -88,23 +89,59 @@ int main () {
 
     auto result =  OD::openDevice("test.txt");
     if (result.has_value()) {
-        std::cout << "Opened Device!" << std::endl;
 
-        const size_t bytes = strlen("Hello from DeviceHub!");
-        ssize_t num_bytes = ::write(result.value().getFd(), "Hello from DeviceHub!", bytes);
-        if (num_bytes == -1) {
+        // Write Data
+        std::string my_data{"Hello from DeviceHub!"};
+        std::span view{my_data};
+        auto bytes_written = result.value().write(std::as_bytes(view));
+
+        if(bytes_written.has_value()) {
+            std::cout << "Bytes written: " << bytes_written.value() << " bytes" << std::endl;
+            if (bytes_written.value() != my_data.size()) {
+                std::cerr << "Partial write!" << '\n';
+                return 1;
+            }
+        } else {
+            std::cerr << "Write failed: " << bytes_written.error().message() << std::endl;
+            return 1;
+        }
+
+        // Set position to zero
+        if (::lseek(result.value().getFd(), 0, SEEK_SET) == -1) {
             const int savedErrno = errno;
             std::error_code ec(savedErrno, std::generic_category());
-            std::cerr << "Write failed: " << ec.message() << std::endl;
-        } else if (static_cast<size_t>(num_bytes) != bytes) {
-            std::cerr << "Written only " << num_bytes << " instead of " << bytes << std::endl;
-        } else {
-            std::cerr << "Data writtten with success!" << std::endl;
+            std::cerr << "lseek failed: " << ec.message() << '\n';
+            return 1;
         }
+
+        // Read Data
+        std::array<std::byte, 100> buffer {};
+        auto bytes_read = result.value().read(buffer);
+        if (bytes_read.has_value()) {
+            std::cout << "Bytes read: " << bytes_read.value() << '\n';
+        } else {
+            std::cerr << "Read failed: " << bytes_read.error().message() << '\n';
+            return 1;
+        }
+
+        // Check Data write vs read
+        if (bytes_written.value() != bytes_read.value()) {
+            std::cerr << "Data mismatch!" << std::endl;
+            return 1;
+        }
+        auto wr_data = std::as_bytes(view);
+        for(size_t i=0; i<wr_data.size(); ++i) {
+            if(wr_data[i] != buffer[i]) {
+                std::cerr << "Data mismatch!" << std::endl;
+                return 1;
+            }
+        }
+
+        std::cout << "Data is identically" << std::endl;
+        
     } else {
         std::cout << "unexpected " << result.error() << std::endl;
     }
-
 
     return 0;
 }
