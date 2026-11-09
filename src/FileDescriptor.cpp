@@ -77,3 +77,30 @@ std::expected<std::size_t, std::error_code> FileDescriptor::write(std::span<cons
 
     return static_cast<std::size_t>(written_bytes);
 }
+
+
+std::expected<std::size_t, WriteAllError> FileDescriptor::writeAll(std::span<const std::byte> buffer) {
+    const auto total_size = buffer.size();
+
+    while (!buffer.empty()) {
+        const auto ret_val = write(buffer);
+        if (!ret_val.has_value()) {
+            return std::unexpected(WriteAllError{
+                ret_val.error(),
+                total_size - buffer.size()
+            });
+        }
+
+        const auto written = ret_val.value();
+        if (written == 0) {
+            return std::unexpected(WriteAllError{
+                std::make_error_code(std::errc::io_error),
+                total_size - buffer.size()
+            });
+        }
+
+        buffer = buffer.subspan(written);
+    }
+
+    return total_size;
+}
